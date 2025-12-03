@@ -1,0 +1,8 @@
+---
+- name: docker
+  hosts: tests
+  become: true
+  gather_facts: true
+  roles:
+    - docker-linux
+    - jenkins
