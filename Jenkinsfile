@@ -30,19 +30,13 @@ pipeline {
         // ------------------------------------------------------------------------
         stage('2. Run OWASP ZAP Automation Scan (Docker One-Shot)') {
             steps {
-                script {
-                    echo "Starting ZAP Automation Scan on ${env.TARGET_URL}..."
-                    
-                    // รัน ZAP Automation Framework (YAML) โดยใช้ Docker CLI
-                    // --rm: ลบ container หลังจากรันเสร็จ
-                    // -v \${PWD}:/zap/wrk/:rw: Map โฟลเดอร์ปัจจุบันของ Jenkins Worker เข้าสู่ Container
-                    sh """
-                        sudo docker run --rm -v \${PWD}:/zap/wrk/:rw owasp/zap2docker-stable \
-                        zap.sh -autorun /zap/wrk/${env.ZAP_PLAN_FILE}
-                    """
-                    
-                    // หมายเหตุ: ถ้า ZAP พบช่องโหว่ตามเงื่อนไข 'fail: true' ใน zap_plan.yaml
-                    // คำสั่ง docker run จะ Exit ด้วย Non-zero Code ทำให้ Pipeline ล้มเหลวที่นี่
+                docker.image('owasp/zap2docker-stable').inside {
+                    sh 'echo "Running ZAP inside the ZAP container..."'
+                    // คำสั่งนี้จะถูกรันภายใน container ของ ZAP
+                    // *หมายเหตุ: ต้องปรับการ map volumes ให้เหมาะสมกับไวยากรณ์ Groovy/inside*
+                    // ในกรณีนี้ ไฟล์ zap_plan.yaml ควรถูกคัดลอกหรือสร้างขึ้นใน Agent 
+                    // แล้วจึงรันภายใน Container
+                    sh "zap.sh -autorun /var/jenkins_home/workspace/test_owasp_zap/zap_plan.yaml"
                 }
             }
         }
