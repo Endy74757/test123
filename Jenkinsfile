@@ -18,9 +18,8 @@ pipeline {
             steps {
                 script {
                     echo "Updating ${env.ZAP_PLAN_FILE} with target: ${env.TARGET_URL}"
-                    // ใช้คำสั่ง sed เพื่อแทนที่ Target URL ในไฟล์ YAML
-                    // *สมมติว่าใน zap_plan.yaml มีการกำหนด target: "" เพื่อรอการแทนที่
-                    sh "sed -i 's|target: \"\"|target: \"${env.TARGET_URL}\"|g' ${env.ZAP_PLAN_FILE}"
+                    // เปลี่ยน ${TARGET_URL} ใน YAML แทนที่ 'target: ${TARGET_URL}'
+                    sh "sed -i 's|target: \\$TARGET_URL|target: ${env.TARGET_URL}|g' ${env.ZAP_PLAN_FILE}"
                 }
             }
         }
@@ -38,7 +37,7 @@ pipeline {
                     // -v \${PWD}:/zap/wrk/:rw: Map โฟลเดอร์ปัจจุบันของ Jenkins Worker เข้าสู่ Container
                     sh """
                         docker run --rm -u 0 -v \${PWD}:/zap/wrk/:rw zaproxy/zap-stable \
-                        zap.sh -cmd -autorun /zap/wrk/${env.ZAP_PLAN_FILE} -dir /zap/wrk
+                        zap.sh -cmd -autorun /zap/wrk/${env.ZAP_PLAN_FILE} -mkdir /zap/wrk
                     """
                     
                     // หมายเหตุ: ถ้า ZAP พบช่องโหว่ตามเงื่อนไข 'fail: true' ใน zap_plan.yaml
