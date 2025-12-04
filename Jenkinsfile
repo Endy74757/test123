@@ -38,7 +38,7 @@ pipeline {
                     // -v \${PWD}:/zap/wrk/:rw: Map โฟลเดอร์ปัจจุบันของ Jenkins Worker เข้าสู่ Container
                     sh """
                         docker run --rm -u 0 -v \${PWD}:/zap/wrk/:rw zaproxy/zap-stable \
-                        zap.sh -cmd -autorun /zap/wrk/${env.ZAP_PLAN_FILE}
+                        zap.sh -cmd -autorun /zap/wrk/${env.ZAP_PLAN_FILE} -dir /zap/wrk
                     """
                     
                     // หมายเหตุ: ถ้า ZAP พบช่องโหว่ตามเงื่อนไข 'fail: true' ใน zap_plan.yaml
