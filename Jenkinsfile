@@ -44,11 +44,11 @@ pipeline {
                 
                     // รัน ZAP Automation Framework (YAML) โดยใช้ Docker CLI
                     // -v \${PWD}:/zap/wrk/:rw: Map โฟลเดอร์ปัจจุบันของ Jenkins Worker เข้าสู่ Container
-                    sh '''
+                    sh """
                     docker run --rm -u 0 -v \${PWD}:/zap/wrk/:rw \\
                     -e TARGET_URL=${env.TARGET_URL} zaproxy/zap-stable  \\
                     zap.sh -cmd -autorun /zap/wrk/${env.ZAP_PLAN_FILE} -dir /zap/wrk
-                    '''
+                    """
                 }
             }
         }
