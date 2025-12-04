@@ -1,7 +1,7 @@
 # zap_plan.yaml
 env:
   # กำหนด Target URL ในส่วน env (แนะนำ)
-  target: ${TARGET_URL}
+  target: ${target}
   
   # กำหนดชื่อเซสชัน
   name: ZAP CI/CD Scan
@@ -11,7 +11,7 @@ contexts:
   - name: Default Context
     # ตั้งค่ารวมถึง URL ที่ ZAP จะทำการสแกนเท่านั้น
     urls:
-      - ${TARGET_URL}
+      - ${target}
     
 jobs:
   # 1. Job Spidering (สำรวจเส้นทาง)
