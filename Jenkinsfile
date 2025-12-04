@@ -41,11 +41,11 @@ pipeline {
             steps {
                 script {
                     echo "Starting ZAP Automation Scan on ${env.TARGET_URL}..."
-                    
+                
                     // รัน ZAP Automation Framework (YAML) โดยใช้ Docker CLI
                     // -v \${PWD}:/zap/wrk/:rw: Map โฟลเดอร์ปัจจุบันของ Jenkins Worker เข้าสู่ Container
                     sh """
-                        docker run --rm -u 0 -v \${PWD}:/zap/wrk/:rw zaproxy/zap-stable \
+                        docker run --rm -u 0 -v \${PWD}:/zap/wrk/:rw zaproxy/zap-stable -e TARGET_URL=${env.TARGET_URL}\
                         zap.sh -cmd -autorun /zap/wrk/${env.ZAP_PLAN_FILE} -dir /zap/wrk
                     """
                 }
