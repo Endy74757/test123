@@ -1,49 +1,55 @@
-# ZAP Automation Framework YAML Plan สำหรับการสแกน DAST ใน CI/CD
-
-# -----------------------------------------------------------
-# 1. Environment Configuration (env)
-# -----------------------------------------------------------
+version: 0.0.1
 env:
-  # การกำหนด Target URL ที่ถูกต้องต้องทำในส่วน contexts
-  # ZAP จะใช้ค่าจาก Contexts เป็นหลักในการกำหนด Scope
+  # กำหนดเป้าหมาย (Target)
   parameters:
-    failOnError: true
-    failOnWarning: false
+    target: "http://34.2.23.55:8888/" 
     
-# -----------------------------------------------------------
-# 2. Contexts (กำหนดขอบเขตและเป้าหมาย)
-# -----------------------------------------------------------
-contexts:
-  - name: Default Scan Scope
-    # Placeholder ที่ Jenkinsfile จะใช้ sed แทนที่ด้วย TARGET_URL จริง
-    urls:
-      - ${TARGET_URL} 
-    
-    # ถ้า API ต้องการ Authentication/Login ให้กำหนดไว้ใน Authentication Block
+  # กำหนด Context 
+  contexts:
+    - name: "Default Context"
+      # รวม/ไม่รวม URL ในการสแกน
+      urls:
+        - "http://34.2.23.55:8888/"
 
-# -----------------------------------------------------------
-# 3. Jobs (ลำดับการทำงาน)
-# -----------------------------------------------------------
 jobs:
-  # Job 1: Spider - สำรวจเส้นทางทั้งหมดของ API
+  # 1. Job: แอดออน (เพื่อให้แน่ใจว่า add-on ที่จำเป็นถูกติดตั้ง)
+  - type: addonInstall
+    parameters:
+      ids: 
+        - pscanrules
+        - pscanrulesBeta
+        - ascanrules
+        - ascanrulesBeta
+
+  # 2. Job: สำรวจเว็บไซต์ด้วย Traditional Spider
   - type: spider
-    name: spider-target
     parameters:
-      maxDuration: 5 
-      maxDepth: 5
-    context: Default Scan Scope # อ้างอิง Context ที่กำหนดไว้ด้านบน
+      context: "Default Context"
+      url: "http://34.2.23.55:8888/"
+      maxDuration: 5 # นาที
 
-  # Job 2: Active Scan - โจมตีและหาช่องโหว่
-  # Active Scan จะใช้ Context ที่ถูกสำรวจโดย Spider ก่อนหน้า
+  # 3. Job: สำรวจเว็บไซต์ด้วย AJAX Spider (สำหรับแอปพลิเคชันสมัยใหม่)
+  - type: ajaxSpider
+    parameters:
+      context: "Default Context"
+      url: "http://34.2.23.55:8888/"
+      maxDuration: 5 # นาที
+
+  # 4. Job: รอให้ Passive Scan ทำงานเสร็จ
+  - type: passiveScan-wait
+    parameters:
+      maxDuration: 5 # นาที
+
+  # 5. Job: Active Scan (โจมตีเป้าหมายเพื่อหาช่องโหว่)
   - type: activeScan
-    name: active-scan
     parameters:
-      policy: Default Policy
+      context: "Default Context"
+      policy: "Default Policy"
+      maxDuration: 60 # นาที
 
-  # Job 3: Report - สร้างรายงานผลลัพธ์
-  - type: report # ต้องใช้ type: report ไม่ใช่ generateReport
-    name: generate-report
+  # 6. Job: สร้างรายงาน
+  - type: report
     parameters:
       template: traditional-html
-      reportDir: /zap/wrk/
-      reportFile: zap_report.html
+      reportFileName: "ZAP_Report_Target.html"
+      reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
