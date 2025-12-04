@@ -17,7 +17,7 @@ contexts:
   - name: Default Scan Scope
     # Placeholder ที่ Jenkinsfile จะใช้ sed แทนที่ด้วย TARGET_URL จริง
     urls:
-      - https://www.google.com
+      - TARGET_URL_PLACEHOLDER 
     
     # ถ้า API ต้องการ Authentication/Login ให้กำหนดไว้ใน Authentication Block
 

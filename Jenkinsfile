@@ -6,7 +6,7 @@ pipeline {
     environment {
         // **URL ของแอปพลิเคชัน Staging ที่ต้องการสแกน**
         // อย่าลืมเปลี่ยนค่านี้เป็น URL ที่เข้าถึงได้จริงของ API
-        TARGET_URL = 'http://api-staging.mydomain.com:8080' 
+        TARGET_URL = 'https://www.google.com' 
         
         // ชื่อไฟล์ ZAP Plan
         ZAP_PLAN_FILE = 'zap_plan.yaml' 
