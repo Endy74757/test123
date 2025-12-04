@@ -1,39 +1,58 @@
-# zap_plan.yaml
-env:
-  # กำหนด Target URL ในส่วน env (แนะนำ)
-  target: ${target}
-  
-  # กำหนดชื่อเซสชัน
-  name: ZAP CI/CD Scan
+# ZAP Automation Framework YAML Plan สำหรับการสแกน DAST ใน CI/CD
 
-contexts:
-  # กำหนด Contexts (จำเป็นถ้าต้องการ Authentication หรือ Scope ที่ซับซ้อน)
-  - name: Default Context
-    # ตั้งค่ารวมถึง URL ที่ ZAP จะทำการสแกนเท่านั้น
-    urls:
-      - ${target}
+# -----------------------------------------------------------
+# 1. Environment Configuration (env)
+# -----------------------------------------------------------
+env:
+  name: ZAP CI/CD DAST Scan
+  # การกำหนด Target URL ที่ถูกต้องต้องทำในส่วน contexts
+  # ZAP จะใช้ค่าจาก Contexts เป็นหลักในการกำหนด Scope
+  parameters:
+    failOnError: true
+    failOnWarning: false
+    # ตรวจสอบว่ามีช่องโหว่ระดับ High/Medium/Low ตามที่ต้องการหรือไม่
+    # ถ้าพบตามเงื่อนไขนี้ ZAP Process จะ Exit ด้วย Non-zero Code
+    processedContext: true
     
+# -----------------------------------------------------------
+# 2. Contexts (กำหนดขอบเขตและเป้าหมาย)
+# -----------------------------------------------------------
+contexts:
+  - name: Default Scan Scope
+    # Placeholder ที่ Jenkinsfile จะใช้ sed แทนที่ด้วย TARGET_URL จริง
+    urls:
+      - TARGET_URL_PLACEHOLDER 
+    
+    # ถ้า API ต้องการ Authentication/Login ให้กำหนดไว้ใน Authentication Block
+
+# -----------------------------------------------------------
+# 3. Jobs (ลำดับการทำงาน)
+# -----------------------------------------------------------
 jobs:
-  # 1. Job Spidering (สำรวจเส้นทาง)
+  # Job 1: Spider - สำรวจเส้นทางทั้งหมดของ API
   - type: spider
     name: spider-target
     parameters:
-      maxDuration: 5
+      maxDuration: 5 
       maxDepth: 5
-    # ตั้งค่า Context ที่ใช้
-    context: Default Context
-    
-  # 2. Job Active Scan (โจมตีหาช่องโหว่)
+    context: Default Scan Scope # อ้างอิง Context ที่กำหนดไว้ด้านบน
+
+  # Job 2: Active Scan - โจมตีและหาช่องโหว่
+  # Active Scan จะใช้ Context ที่ถูกสำรวจโดย Spider ก่อนหน้า
   - type: activeScan
     name: active-scan
     parameters:
       policy: Default Policy
-    context: Default Context
-    
-  # 3. Job Report (ต้องมี)
-  - type: generateReport
+      # ตัวอย่างการกำหนดเงื่อนไขให้ Fail เมื่อพบช่องโหว่ระดับ High
+      maxRuleDuration: 1
+      maxScanDuration: 5
+
+  # Job 3: Report - สร้างรายงานผลลัพธ์
+  - type: report # ต้องใช้ type: report ไม่ใช่ generateReport
     name: generate-report
     parameters:
       template: traditional-html
       reportDir: /zap/wrk/
       reportFile: zap_report.html
+      title: DAST Scan Report - ${TARGET_URL_PLACEHOLDER}
+      description: Automated DAST Scan via Jenkins CI/CD Pipeline
