@@ -2,14 +2,14 @@ version: 0.0.1
 env:
   # กำหนดเป้าหมาย (Target)
   parameters:
-    target: "http://34.2.23.55:8888/" 
+    target: "http://34.2.27.127:8888/" 
     
   # กำหนด Context 
   contexts:
     - name: "Default Context"
       # รวม/ไม่รวม URL ในการสแกน
       urls:
-        - "http://34.2.23.55:8888/"
+        - "http://34.2.27.127:8888/"
 
 jobs:
   # 1. Job: แอดออน (เพื่อให้แน่ใจว่า add-on ที่จำเป็นถูกติดตั้ง)
@@ -25,14 +25,14 @@ jobs:
   - type: spider
     parameters:
       context: "Default Context"
-      url: "http://34.2.23.55:8888/"
+      url: "http://34.2.27.127:8888/"
       maxDuration: 5 # นาที
 
   # 3. Job: สำรวจเว็บไซต์ด้วย AJAX Spider (สำหรับแอปพลิเคชันสมัยใหม่)
   - type: ajaxSpider
     parameters:
       context: "Default Context"
-      url: "http://34.2.23.55:8888/"
+      url: "http://34.2.27.127:8888/"
       maxDuration: 5 # นาที
 
   # 4. Job: รอให้ Passive Scan ทำงานเสร็จ
