@@ -59,7 +59,8 @@ pipeline {
         stage('3. Publish Report') {
             steps {
                 // เก็บรายงาน (zap_report.html) ที่ถูกสร้างโดย ZAP ใน Stage ที่ 2
-                archiveArtifacts artifacts: 'reports/ZAP_Report_Target.html', fingerprint: true
+                // archiveArtifacts artifacts: 'reports/ZAP_Report_Target.html', fingerprint: true
+                tar file: 'zap-scan-report.tar.gz', dir: 'reports', compress: true, archive: true
             }
         }
     }

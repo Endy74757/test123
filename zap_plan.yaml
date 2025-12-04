@@ -1,5 +1,4 @@
-env:
-    
+env:    
   # กำหนด Context 
   contexts:
     - name: "Default Context"
@@ -36,6 +35,66 @@ jobs:
   # 6. Job: สร้างรายงาน
   - type: report
     parameters:
+      template: high-level-report
+      reportFile: "high-level-report.html"
+      reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
+  
+  - type: report
+    parameters:
+      template: modern
+      reportFile: "modern-report.html"
+      reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
+
+  - type: report
+    parameters:
+      template: risk-confidence-html
+      reportFile: "risk-confidence-report.html"
+      reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
+
+  - type: report
+    parameters:
       template: traditional-html
-      reportFile: "ZAP_Report_Target.html"
+      reportFile: "traditional-html-report.html"
+      reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
+
+  - type: report
+    parameters:
+      template: traditional-html-plus
+      reportFile: "traditional-html-plus-report.html"
+      reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
+  
+  - type: report
+    parameters:
+      template: traditional-json
+      reportFile: "traditional-json-report.json"
+      reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
+
+  - type: report
+    parameters:
+      template: traditional-json-plus
+      reportFile: "traditional-json-plus-report.json"
+      reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
+  
+  - type: report
+    parameters:
+      template: sarif-json
+      reportFile: "sarif-json-report.json"
+      reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
+  
+  - type: report
+    parameters:
+      template: traditional-md
+      reportFile: "traditional-md-report.mb"
+      reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
+
+  - type: report
+    parameters:
+      template: traditional-xml
+      reportFile: "traditional-xml-report.xml"
+      reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
+
+  - type: report
+    parameters:
+      template: traditional-xml-plus
+      reportFile: "traditional-xml-plus-report.xml"
       reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
