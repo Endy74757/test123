@@ -37,7 +37,7 @@ pipeline {
                     // --rm: ลบ container หลังจากรันเสร็จ
                     // -v \${PWD}:/zap/wrk/:rw: Map โฟลเดอร์ปัจจุบันของ Jenkins Worker เข้าสู่ Container
                     sh """
-                        docker run --rm -v \${PWD}:/zap/wrk/:rw owasp/zap2docker-stable \
+                        docker run --rm -v \${PWD}:/zap/wrk/:rw zaproxy/zap-stable \
                         zap.sh -autorun /zap/wrk/${env.ZAP_PLAN_FILE}
                     """
                     
