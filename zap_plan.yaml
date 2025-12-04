@@ -4,15 +4,11 @@
 # 1. Environment Configuration (env)
 # -----------------------------------------------------------
 env:
-  name: ZAP CI/CD DAST Scan
   # การกำหนด Target URL ที่ถูกต้องต้องทำในส่วน contexts
   # ZAP จะใช้ค่าจาก Contexts เป็นหลักในการกำหนด Scope
   parameters:
     failOnError: true
     failOnWarning: false
-    # ตรวจสอบว่ามีช่องโหว่ระดับ High/Medium/Low ตามที่ต้องการหรือไม่
-    # ถ้าพบตามเงื่อนไขนี้ ZAP Process จะ Exit ด้วย Non-zero Code
-    processedContext: true
     
 # -----------------------------------------------------------
 # 2. Contexts (กำหนดขอบเขตและเป้าหมาย)
@@ -43,9 +39,6 @@ jobs:
     name: active-scan
     parameters:
       policy: Default Policy
-      # ตัวอย่างการกำหนดเงื่อนไขให้ Fail เมื่อพบช่องโหว่ระดับ High
-      maxRuleDuration: 1
-      maxScanDuration: 5
 
   # Job 3: Report - สร้างรายงานผลลัพธ์
   - type: report # ต้องใช้ type: report ไม่ใช่ generateReport
@@ -54,5 +47,3 @@ jobs:
       template: traditional-html
       reportDir: /zap/wrk/
       reportFile: zap_report.html
-      title: DAST Scan Report - ${TARGET_URL_PLACEHOLDER}
-      description: Automated DAST Scan via Jenkins CI/CD Pipeline
