@@ -59,7 +59,7 @@ pipeline {
         stage('3. Publish Report') {
             steps {
                 // เก็บรายงาน (zap_report.html) ที่ถูกสร้างโดย ZAP ใน Stage ที่ 2
-                archiveArtifacts artifacts: 'zap_report.html', fingerprint: true
+                archiveArtifacts artifacts: 'ZAP_Report_Target.html', fingerprint: true
             }
         }
     }
