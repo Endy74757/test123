@@ -1,4 +1,3 @@
-version: 0.0.1
 env:
   # กำหนดเป้าหมาย (Target)
   parameters:
