@@ -1,7 +1,4 @@
 env:
-  # กำหนดเป้าหมาย (Target)
-  parameters:
-    target: "http://34.2.27.127:8888/" 
     
   # กำหนด Context 
   contexts:
@@ -11,15 +8,6 @@ env:
         - "http://34.2.27.127:8888/"
 
 jobs:
-  # 1. Job: แอดออน (เพื่อให้แน่ใจว่า add-on ที่จำเป็นถูกติดตั้ง)
-  - type: addonInstall
-    parameters:
-      ids: 
-        - pscanrules
-        - pscanrulesBeta
-        - ascanrules
-        - ascanrulesBeta
-
   # 2. Job: สำรวจเว็บไซต์ด้วย Traditional Spider
   - type: spider
     parameters:
@@ -28,7 +16,7 @@ jobs:
       maxDuration: 5 # นาที
 
   # 3. Job: สำรวจเว็บไซต์ด้วย AJAX Spider (สำหรับแอปพลิเคชันสมัยใหม่)
-  - type: ajaxSpider
+  - type: spiderAjax
     parameters:
       context: "Default Context"
       url: "http://34.2.27.127:8888/"
@@ -44,11 +32,10 @@ jobs:
     parameters:
       context: "Default Context"
       policy: "Default Policy"
-      maxDuration: 60 # นาที
 
   # 6. Job: สร้างรายงาน
   - type: report
     parameters:
       template: traditional-html
-      reportFileName: "ZAP_Report_Target.html"
+      reportFile: "ZAP_Report_Target.html"
       reportDir: "reports" # โฟลเดอร์ที่จะเก็บรายงาน
